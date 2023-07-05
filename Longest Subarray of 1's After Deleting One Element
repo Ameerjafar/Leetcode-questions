@@ -1,0 +1,33 @@
+class Solution {
+      public int helper(int[] nums) {
+        int sum1 = 0;
+        int sum2 = 0;
+        int pointer = 0;
+        while (nums[pointer] != 0 && pointer < nums.length - 1) {
+            sum1 += nums[pointer];
+            sum2 += nums[pointer];
+            pointer++;
+        }
+        int maxi = 0;
+        for(int i = pointer + 1; i < nums.length; i++) {
+            if(nums[i] == 0) {
+                maxi = Math.max(maxi, sum2);
+                sum2 = sum2 - sum1;
+                sum1 = sum2;
+            }
+            else {
+                sum2++;
+            }
+        }
+        if(maxi < sum2) {
+
+            return sum2;
+        }
+
+        return maxi;
+    }
+
+    public int longestSubarray(int[] nums) {
+        return helper(nums);
+    }
+}
