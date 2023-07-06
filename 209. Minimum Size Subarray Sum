@@ -1,0 +1,102 @@
+// brute force approach(It would give you TLE)
+class Solution {
+
+    public boolean helper(int target, List<Integer> list) {
+        int sum = 0;
+        for(int i = 0; i < list.size(); i++) {
+            sum += list.get(i);
+        }
+        if(sum >= target) {
+            return true;
+        }
+        return false;
+    }
+
+    public int minSubArrayLen(int target, int[] nums) {
+        int mini = Integer.MAX_VALUE;
+        for(int i = 0; i < nums.length; i++) {
+            List<Integer> list = new ArrayList<>();
+            for(int j = i; j < nums.length; j++) {
+                list.add(nums[j]);
+                if(helper(target, list)) {
+                    mini = Math.min(list.size(), mini);
+                }
+                
+            }
+        }
+        if(mini == Integer.MAX_VALUE) return 0;
+
+        return mini;
+    }
+}
+
+
+// binary search (better technique to solve this problem)
+
+class Solution {
+      public boolean slidingWindow(int k, int[] nums, int target) {
+
+      int sum = 0;
+      for(int i = 0; i < k; i++) {
+
+         sum += nums[i];
+      }
+      if(sum >= target) {
+         return true;
+      }
+      int pointer = 0;
+      for(int i = k; i < nums.length; i++) {
+         sum += nums[i];
+         sum -= nums[pointer++];
+         if(sum >= target) {
+            return true;
+         }
+      }
+      return false;
+   }
+   public int binary_search(int[] nums, int target) {
+      int mini = Integer.MAX_VALUE;
+      int start = 1;
+      int end = nums.length;
+      while (start <= end) {
+         int mid = (start + end) / 2;
+         if(slidingWindow(mid, nums, target)) {
+            mini = Math.min(mini, mid);
+            end = mid - 1;
+         }
+         else {
+            start = mid + 1;
+         }
+      }
+      if(mini == Integer.MAX_VALUE) {
+         return 0;
+      }
+      return mini;
+   }
+
+    public int minSubArrayLen(int target, int[] nums) {
+        return binary_search(nums, target);
+    }
+}
+
+
+// sliding window (optimal technique to solve this problem)
+
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int sum = 0;
+        int pointer = 0;
+        int mini = Integer.MAX_VALUE;
+        for(int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            while (sum >= target) {
+                sum -= nums[pointer];
+                mini = Math.min(mini, i - pointer + 1);
+                pointer++;
+            }
+        }
+        if(mini == Integer.MAX_VALUE) return 0;
+
+        return mini;
+    }
+}
