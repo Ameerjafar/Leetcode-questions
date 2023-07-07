@@ -1,0 +1,72 @@
+// naive approach(it will give tle)
+
+class Solution {
+    public boolean helper(ArrayList<Integer> list, int k) {
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i) == 0) {
+                k--;
+            }
+        }
+        if(k < 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public int longestOnes(int[] nums, int k) {
+        int maxi = Integer.MIN_VALUE;
+        for(int i = 0; i < nums.length; i++) {
+            ArrayList<Integer> list = new ArrayList<>();
+            for(int j = i; j < nums.length; j++) {
+                list.add(nums[j]);
+                if(helper(list, k)) {
+                    maxi = Math.max(maxi, list.size());
+                }
+            }
+        }
+        if(maxi == Integer.MIN_VALUE) return 0;
+
+        return maxi;
+    }
+}
+
+// binary search approach -> tc - O(nlogn) sc -> O(1)
+class Solution {
+     public boolean helper(int[] nums, int k, int mid) {
+      int sum = 0;
+      for(int i = 0; i < mid; i++) {
+         sum += nums[i];
+      }
+      if((mid - sum) <= k) {
+         return true;
+      }
+      for(int i = mid; i < nums.length; i++) {
+         sum -= nums[i - mid];
+         sum += nums[i];
+         if((mid - sum) <= k) {
+            return true;
+         }
+      }
+      return false;
+   }
+   public int binarySearch(int[] nums, int k) {
+      int start = 0;
+      int end = nums.length;
+      int maxi = Integer.MIN_VALUE;
+      while (start <= end) {
+         int mid = (start + end) / 2;
+         if(helper(nums, k, mid)) {
+            maxi = Math.max(maxi, mid);
+            start = mid + 1;
+         }
+         else {
+            end = mid - 1;
+         }
+      }
+      return maxi;
+   }
+    public int longestOnes(int[] nums, int k) {
+       
+        return binarySearch(nums, k);
+    }
+}
