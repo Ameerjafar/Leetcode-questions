@@ -1,0 +1,53 @@
+// brute force solution (it will give tle- time limit exceeded)
+
+class Solution {
+    public boolean helper(List<Integer> list, int k, int threshold) {
+        int sum = 0;
+        for(int i = 0; i < k; i++) {
+            sum += list.get(i);
+        }
+        if(sum / k >= threshold) return true;
+        return false;
+    }
+    public int numOfSubarrays(int[] arr, int k, int threshold) {
+        int count = 0;
+        for(int i = 0; i < arr.length; i++) {
+            List<Integer> list = new ArrayList<>();
+            for(int j = i; j < arr.length; j++) {
+                list.add(arr[j]);
+                if(list.size() == k){
+                    if(helper(list, k, threshold)) {
+                    count ++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+}
+
+// optimal approach using sliding window
+class Solution {
+    public int numOfSubarrays(int[] arr, int k, int threshold) {
+        int count = 0;
+        int sum = 0;
+        for(int i = 0; i < k; i++) {
+            sum += arr[i];
+        }
+        if((sum / k) >= threshold) {
+            count++;
+        }
+        for(int i = k; i < arr.length; i++) {
+            sum -= arr[i - k];
+            sum += arr[i];
+            if((sum / k) >= threshold) {
+                count++;
+            }
+
+        }
+        return count;
+    }
+}
